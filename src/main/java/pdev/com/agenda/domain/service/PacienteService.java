@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pdev.com.agenda.domain.entity.Paciente;
 import pdev.com.agenda.domain.repository.PacienteRepository;
+import pdev.com.agenda.exception.BusinessException;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PacienteService {
 
-    private PacienteRepository repository;
+    private final PacienteRepository repository;
 
 //    public PacienteService(PacienteRepository repository){
 //        this.repository = repository;
@@ -22,6 +23,23 @@ public class PacienteService {
 
     public Paciente salvar(Paciente paciente){
         //TODO: PARA VALIDAR SE O CPF JA NAO EXISTE
+        //seria buscar um paciente por cpf
+
+        boolean existeCpf = false;
+
+        Optional<Paciente> optPaciente = repository.findByCpf(paciente.getCpf());
+
+        if(optPaciente.isPresent()){
+            if(!optPaciente.get().getId().equals(paciente.getId())){
+                existeCpf = true;
+            }
+        }
+
+        if(existeCpf){
+            throw new BusinessException("Cpf ja cadastrado!");
+        }
+
+        return repository.save(paciente);
     }
 
     public List<Paciente> listarTodos(){

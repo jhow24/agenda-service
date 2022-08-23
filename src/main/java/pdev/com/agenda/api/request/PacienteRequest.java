@@ -5,14 +5,23 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class PacienteRequest {
 
+    @NotBlank(message = "Nome do paciente é obrigatorio")
     private String nome;
+
+    @NotBlank(message = "Sobrenome do paciente é obrigatorio")
     private String sobrenome;
+
+
     private String email;
+
+    @NotBlank(message = "Cpf do paciente é obrigatorio")
     private String cpf;
 }
